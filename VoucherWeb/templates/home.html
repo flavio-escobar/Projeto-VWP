@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block body %}
+        <div class="container">
+            <form method="POST" action="" class="mx-auto" style="width: 400px;">
+                {{ form_solicitarvoucher.csrf_token }}
+                <legend>Solicitar Voucher</legend>
+                <hr>
+                <fieldset>
+                    <div class="form-group">
+                        {{ form_solicitarvoucher.solicitante.label(class="form-control-label") }}
+                        
+                        {% if form_solicitarvoucher.solicitante.errors %}
+                            {{ form_solicitarvoucher.solicitante(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form_solicitarvoucher.solicitante.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_solicitarvoucher.solicitante(class="form-control") }}
+                        {% endif %}
+
+                        {{ form_solicitarvoucher.destinatario.label(class="form-control-label") }}
+                        {% if form_solicitarvoucher.destinatario.errors %}
+                            {{ form_solicitarvoucher.destinatario(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form_solicitarvoucher.destinatario.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_solicitarvoucher.destinatario(class="form-control") }}
+                        {% endif %}
+
+                        {{ form_solicitarvoucher.validade.label(class="form-control-label") }}
+                        {% if form_solicitarvoucher.validade.errors %}
+                            {{ form_solicitarvoucher.validade(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form_solicitarvoucher.validade.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_solicitarvoucher.validade(class="form-control") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                {{ form_solicitarvoucher.botao_submit_solicitarvoucher(class="btn btn-primary") }}
+            </form>
+        </div>
+{% endblock %}
