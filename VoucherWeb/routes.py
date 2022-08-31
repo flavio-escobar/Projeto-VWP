@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request
-from VoucherWeb import app, database
+from VoucherWeb import app, database, bcrypt
 from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario
 
@@ -32,7 +32,8 @@ def login():
 def criar_conta():
     form_criarconta = FormCriarConta()
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
-        usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=form_criarconta.senha.data)
+        senha_cript = bycrypt.generate_password_hash(form_criarconta.senha.data)
+        usuario = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
         database.session.add(usuario)
         database.session.commit()
         flash("Conta Criada com Sucesso para: {}".format(form_criarconta.username.data),'alert-success')
