@@ -1,9 +1,7 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request
 from VoucherWeb import app, database
 from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario
-
-lista_usuarios = ['admin', 'usuario']
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
