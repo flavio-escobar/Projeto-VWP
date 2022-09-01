@@ -21,28 +21,16 @@
                             {{ form_solicitarvoucher.solicitante(class="form-control") }}
                         {% endif %}
 
-                        {{ form_solicitarvoucher.destinatario.label(class="form-control-label") }}
-                        {% if form_solicitarvoucher.destinatario.errors %}
-                            {{ form_solicitarvoucher.destinatario(class="form-control is-invalid") }}
+                        {{ form_solicitarvoucher.cpf_mat.label(class="form-control-label") }}
+                        {% if form_solicitarvoucher.cpf_mat.errors %}
+                            {{ form_solicitarvoucher.cpf_mat(class="form-control is-invalid") }}
                             <div class="invalid-feedback">
-                                {% for erro in form_solicitarvoucher.destinatario.errors %}
+                                {% for erro in form_solicitarvoucher.cpf_mat.errors %}
                                     {{ erro }}
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form_solicitarvoucher.destinatario(class="form-control") }}
-                        {% endif %}
-
-                        {{ form_solicitarvoucher.validade.label(class="form-control-label") }}
-                        {% if form_solicitarvoucher.validade.errors %}
-                            {{ form_solicitarvoucher.validade(class="form-control is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for erro in form_solicitarvoucher.validade.errors %}
-                                    {{ erro }}
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form_solicitarvoucher.validade(class="form-control") }}
+                            {{ form_solicitarvoucher.cpf_mat(class="form-control") }}
                         {% endif %}
                     </div>
                 </fieldset>
