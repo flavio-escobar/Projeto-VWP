@@ -4,7 +4,7 @@ from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario, Voucher
 import datetime
 
-lista_usuarios = [flavio, escobar]
+lista_usuarios = ['flavio', 'escobar']
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -12,9 +12,9 @@ def home():
     if form_solicitarvoucher.validate_on_submit and 'botao_submit_solicitarvoucher' in request.form:
         #verificar se o solicitante ja pediu voucher na data corrente
         date = datetime.date.today()
-        query = session.query(database.Voucher).filter_by(data_uso = date)
+        query = Voucher.query.filter_by(data_uso = date).all()
         if form_solicitarvoucher.solicitante.data in query.solicitante:
-            flash("Você já solicitou um voucher hoje",'alert-failed')
+            flash("Você já solicitou um voucher hoje",'alert-danger')
         else:
             #consultar o Bd atras de um voucher não usado
             query = session.query(database.Voucher).filter_by(usado = False).first()
@@ -27,7 +27,7 @@ def home():
                 #Entregar o voucher pro cliente
                 flash("Este é o seu Voucher: {}".format(query.cod_voucher),'alert-success')
             else:
-                flash("Não há vouchers disponivel. Favor contatar o setor de I.T.",'alert-failed')
+                flash("Não há vouchers disponivel. Favor contatar o setor de I.T.",'alert-danger')
         return redirect(url_for('home'))
     return render_template('home.html', form_solicitarvoucher=form_solicitarvoucher)
 
