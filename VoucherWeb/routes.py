@@ -45,7 +45,7 @@ def usuarios():
 def login():
     form_login = FormLogin()
     if form_login.validate_on_submit() and 'botao_submit_fazerlogin' in request.form:
-        usuario = Usuario.query.filter_by(email=form_login.email.data).first()
+        usuario = Usuario.query.filter_by(username=form_login.username.data).first()
         if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
             login_user(usuario)
             flash("Bem-Vindo {}".format(form_login.username.data), 'alert-success')
