@@ -2,12 +2,13 @@ from flask import render_template, redirect, url_for, flash, request
 from VoucherWeb import app, database, bcrypt
 from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario, Voucher
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 import datetime
 
 
 lista_usuarios = ['flavio', 'escobar']
 
+#o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form_solicitarvoucher = FormSolicitarVoucher()
@@ -38,6 +39,7 @@ def contato():
     return render_template('contato.html')
 
 @app.route('/usuarios')
+@login_required()
 def usuarios():
     return render_template('usuarios.html', lista_usuarios=lista_usuarios)
 
@@ -77,15 +79,18 @@ def criar_conta():
 
 
 @app.route('/sair')
+@login_required
 def sair():
     logout_user()
     flash(f'Logout Feito com Sucesso', 'alert-success')
     return redirect(url_for('home'))
 
 @app.route('/perfil')
+@login_required
 def perfil():
     return render_template('perfil.html')
 
-@app.route('/opcoes')
-def opcoes():
-    return render_template('opcoes.html')
+@app.route('/admin')
+@login_required
+def admin():
+    return render_template('admin.html')
