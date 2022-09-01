@@ -2,7 +2,9 @@ from flask import render_template, redirect, url_for, flash, request
 from VoucherWeb import app, database, bcrypt
 from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario, Voucher
+from flask_login import login_user
 import datetime
+
 
 lista_usuarios = ['flavio', 'escobar']
 
@@ -43,10 +45,14 @@ def usuarios():
 def login():
     form_login = FormLogin()
     if form_login.validate_on_submit() and 'botao_submit_fazerlogin' in request.form:
-        #Adicionar condições de autenticação para acesso as areas restritas do sistema
-        flash("Bem-Vindo {}".format(form_login.username.data), 'alert-success')
-        return redirect(url_for('home'))
-        #fez login com sucesso
+        usuario = Usuario.query.filter_by(email=form_login.email.data).first()
+        if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
+            login_user(usuario)
+            flash("Bem-Vindo {}".format(form_login.username.data), 'alert-success')
+            return redirect(url_for('home'))
+            #fez login com sucesso
+        else:
+            flash("Falha no login. Email ou senha incorretos", 'alert-danger')
     return render_template('login.html', form_login=form_login)
 
 @app.route('/criar_conta', methods=['GET', 'POST'])
