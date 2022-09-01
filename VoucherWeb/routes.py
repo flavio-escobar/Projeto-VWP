@@ -15,18 +15,18 @@ def home():
     if form_solicitarvoucher.validate_on_submit and 'botao_submit_solicitarvoucher' in request.form:
         #verificar se o solicitante ja pediu voucher na data corrente
         date = datetime.date.today()
-        query = Voucher.query.filter_by(data_uso = date).all()
+        query = Voucher.query.filter_by(data_uso = '').first()
         if form_solicitarvoucher.solicitante.data in query.solicitante:
             flash("Você já solicitou um voucher hoje",'alert-danger')
         else:
             #consultar o Bd atras de um voucher não usado
-            query = session.query(database.Voucher).filter_by(usado = False).first()
+            query = Voucher.query.filter_by(usado = False).first()
             if query:
                 #escrever nesse BD o nome e cpf_mat do solicitante e data da solicitação,marcar voucher como usado=True
-                voucher = Voucher(cod_voucher=query.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf_mat = form_solicitarvoucher.cpf_mat.data, data_uso = date)
-                database.session.add(voucher)
+                voucher = Voucher(cod_voucher=query.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf_mat = form_solicitarvoucher.cpf_mat.data, data_uso = '')
+                #colocar aqui a alteração que deve ser feita no bd
                 #committar o bd
-                database.session.commit()
+                #database.session.commit()
                 #Entregar o voucher pro cliente
                 flash("Este é o seu Voucher: {}".format(query.cod_voucher),'alert-success')
             else:
@@ -39,7 +39,7 @@ def contato():
     return render_template('contato.html')
 
 @app.route('/usuarios')
-@login_required()
+@login_required
 def usuarios():
     return render_template('usuarios.html', lista_usuarios=lista_usuarios)
 
@@ -47,11 +47,21 @@ def usuarios():
 def login():
     form_login = FormLogin()
     if form_login.validate_on_submit() and 'botao_submit_fazerlogin' in request.form:
+        #intancia um usuario no formato do da tabela do BD filtrando pelo username
         usuario = Usuario.query.filter_by(username=form_login.username.data).first()
+        #verifica se o username e a senha encriptada estão preenchidas, pois se estiverem é pq há um username no bd
         if usuario and bcrypt.check_password_hash(usuario.senha, form_login.senha.data):
+            #efetiva a sessão do login do usuario
             login_user(usuario)
+            #mostra uma caixa de mensagem com uma alerta de sucesso no login
             flash("Bem-Vindo {}".format(form_login.username.data), 'alert-success')
-            return redirect(url_for('home'))
+            #pega o indicador de uma pagina que o usuario estava tentando acessar e que precisa de login feito pra ter acesso
+            # e depois do login feito redireciona para a pagina que estava tentando ser acessada anteriomente
+            par_next = request.args.get('next')
+            if par_next:
+                return redirect(par_next)
+            else:
+                return redirect(url_for('home'))
             #fez login com sucesso
         else:
             flash("Falha no login. Email ou senha incorretos", 'alert-danger')
