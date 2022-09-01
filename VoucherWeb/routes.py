@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from VoucherWeb import app, database, bcrypt
 from VoucherWeb.forms import FormCriarConta, FormLogin, FormSolicitarVoucher
 from VoucherWeb.models import Usuario, Voucher
-from flask_login import login_user
+from flask_login import login_user, logout_user, current_user
 import datetime
 
 
@@ -74,3 +74,18 @@ def criar_conta():
         return redirect(url_for('home'))
         #Criou Conta com sucesso
     return render_template('criar_conta.html', form_criarconta=form_criarconta)
+
+
+@app.route('/sair')
+def sair():
+    logout_user()
+    flash(f'Logout Feito com Sucesso', 'alert-success')
+    return redirect(url_for('home'))
+
+@app.route('/perfil')
+def perfil():
+    return render_template('perfil.html')
+
+@app.route('/opcoes')
+def opcoes():
+    return render_template('opcoes.html')
