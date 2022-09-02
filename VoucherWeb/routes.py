@@ -18,8 +18,10 @@ def espertao(esperto):
     #Percorre a lista de vouchers usados e ve se tem algum espertão nessa lista
     for i in range(len(usado)):
         if usado[i].solicitante == esperto:
+            #flash("usado:{}".format(usado[i].solicitante),'alert-danger')
+            #flash("esperto:{}".format(esperto),'alert-danger')
             return True
-        return False
+    return False
 
 #o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
 @app.route('/', methods=['GET', 'POST'])
@@ -34,7 +36,7 @@ def home():
             nao_usado = Voucher.query.filter_by(data_uso = '').first()
             if nao_usado:
                 #escrever nesse BD o nome e cpf_mat do solicitante e data da solicitação,marcar voucher como usado=True
-                voucher = Voucher(cod_voucher=nao_usado.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf_mat = form_solicitarvoucher.cpf_mat.data, data_uso = data)
+                voucher = Voucher(cod_voucher=nao_usado.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf = form_solicitarvoucher.cpf_mat.data, data_uso = data)
                 database.session.delete(nao_usado)
                 database.session.commit()
                 database.session.add(voucher)
@@ -77,7 +79,7 @@ def login():
                 return redirect(url_for('home'))
             #fez login com sucesso
         else:
-            flash("Falha no login. Email ou senha incorretos", 'alert-danger')
+            flash("Falha no login. Username ou senha incorretos", 'alert-danger')
     return render_template('login.html', form_login=form_login)
 
 @app.route('/criar_conta', methods=['GET', 'POST'])
@@ -100,18 +102,6 @@ def criar_conta():
         #Criou Conta com sucesso
     return render_template('criar_conta.html', form_criarconta=form_criarconta)
 
-
-def upar_voucher():
-    list_voucher = ['55capk4','n3ad575','cp58cs6','ue7mvm','fvbapp6','b6mnsr','p24fmh4','bbnhuz4','w6d2363','upbs8a3','fnk4ff6',
-    '25kmcn3','rvv7dp6','wsaphb6','b7axh34','8u2wxs6','7bm7sp3','rdey7v3','8czdd56','72dmms4','dnmhc23','7eycac6','w66zyp5','x7vnu44','vpeb7m6']   
-    for item in list_voucher:
-        voucher = Voucher(cod_voucher=item, usado=False, solicitante= '', cpf_mat='', data_uso='')
-        database.session.add(voucher)
-        print(item)
-    database.session.commit()
-#upar_voucher()
-
-
 @app.route('/sair')
 @login_required
 def sair():
@@ -127,4 +117,6 @@ def perfil():
 @app.route('/admin')
 @login_required
 def admin():
-    return render_template('admin.html')
+    lista_voucher = Voucher.query.all()
+    tam_lista = (int(len(lista_voucher)))
+    return render_template('admin.html', tam_lista=tam_lista, lista_voucher=lista_voucher)

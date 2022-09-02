@@ -1,7 +1,32 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <div class="container">
-        <h1>Aqui teremos o gerenciamento da pagina</h1>
+    <div class="container table-responsive-lg">
+        <h4>Pagina de Administração</h4>
+        <table class="table tablet-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Codigo Voucher</th>
+                <th scope="col">Usado</th>
+                <th scope="col">solicitante</th>
+                <th scope="col">CPF</th>
+                <th scope="col">Data de Uso</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+            {% for i in range(tam_lista) %}
+            <tr>
+                <th scope="row">{{i}}</th>
+                <td>{{ lista_voucher[i].cod_voucher}}</td>
+                <td>{{ lista_voucher[i].usado }}</td>
+                <td>{{ lista_voucher[i].solicitante }}</td>
+                <td>{{ lista_voucher[i].cpf}}</td>
+                <td>{{ lista_voucher[i].data_uso }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
     </div>
 {% endblock %}

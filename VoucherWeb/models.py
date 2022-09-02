@@ -21,5 +21,5 @@ class Voucher(database.Model):
     cod_voucher = database.Column(database.String, nullable=False, unique=True, default = '')
     usado = database.Column(database.Boolean, default = False)
     solicitante = database.Column(database.String, default = '')
-    cpf_mat = database.Column(database.String, nullable=False, default = '')
+    cpf = database.Column(database.String, nullable=False, default = '')
     data_uso = database.Column(database.String, default = '')
