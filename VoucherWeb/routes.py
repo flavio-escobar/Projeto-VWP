@@ -8,27 +8,40 @@ import datetime
 
 lista_usuarios = ['flavio', 'escobar']
 
+#Pega a data corrente
+data = (str(datetime.date.today()))
+
+#Verifica se o usuario quer ser espertão e pegar mais de voucher por dia
+def espertao(esperto):
+    #pega uma lista de vouchers usados
+    usado = Voucher.query.filter_by(data_uso=data).all()
+    #Percorre a lista de vouchers usados e ve se tem algum espertão nessa lista
+    for i in range(len(usado)):
+        if usado[i].solicitante == esperto:
+            return True
+        return False
+
 #o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form_solicitarvoucher = FormSolicitarVoucher()
     if form_solicitarvoucher.validate_on_submit and 'botao_submit_solicitarvoucher' in request.form:
         #verificar se o solicitante ja pediu voucher na data corrente
-        date = datetime.date.today()
-        query = Voucher.query.filter_by(data_uso = '').first()
-        if form_solicitarvoucher.solicitante.data in query.solicitante:
-            flash("Você já solicitou um voucher hoje",'alert-danger')
+        if espertao(form_solicitarvoucher.solicitante.data):
+            flash("Só é possivel solicitar um Voucher por dia. Você já solicitou um voucher hoje.",'alert-danger')
         else:
             #consultar o Bd atras de um voucher não usado
-            query = Voucher.query.filter_by(usado = False).first()
-            if query:
+            nao_usado = Voucher.query.filter_by(data_uso = '').first()
+            if nao_usado:
                 #escrever nesse BD o nome e cpf_mat do solicitante e data da solicitação,marcar voucher como usado=True
-                voucher = Voucher(cod_voucher=query.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf_mat = form_solicitarvoucher.cpf_mat.data, data_uso = '')
-                #colocar aqui a alteração que deve ser feita no bd
+                voucher = Voucher(cod_voucher=nao_usado.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf_mat = form_solicitarvoucher.cpf_mat.data, data_uso = data)
+                database.session.delete(nao_usado)
+                database.session.commit()
+                database.session.add(voucher)
                 #committar o bd
-                #database.session.commit()
+                database.session.commit()
                 #Entregar o voucher pro cliente
-                flash("Este é o seu Voucher: {}".format(query.cod_voucher),'alert-success')
+                flash("Este é o seu Voucher: {}".format(voucher.cod_voucher),'alert-success')
             else:
                 flash("Não há vouchers disponivel. Favor contatar o setor de I.T.",'alert-danger')
         return redirect(url_for('home'))
@@ -86,6 +99,17 @@ def criar_conta():
         return redirect(url_for('home'))
         #Criou Conta com sucesso
     return render_template('criar_conta.html', form_criarconta=form_criarconta)
+
+
+def upar_voucher():
+    list_voucher = ['55capk4','n3ad575','cp58cs6','ue7mvm','fvbapp6','b6mnsr','p24fmh4','bbnhuz4','w6d2363','upbs8a3','fnk4ff6',
+    '25kmcn3','rvv7dp6','wsaphb6','b7axh34','8u2wxs6','7bm7sp3','rdey7v3','8czdd56','72dmms4','dnmhc23','7eycac6','w66zyp5','x7vnu44','vpeb7m6']   
+    for item in list_voucher:
+        voucher = Voucher(cod_voucher=item, usado=False, solicitante= '', cpf_mat='', data_uso='')
+        database.session.add(voucher)
+        print(item)
+    database.session.commit()
+#upar_voucher()
 
 
 @app.route('/sair')
