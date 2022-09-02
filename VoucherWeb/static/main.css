@@ -1,3 +1,7 @@
+#intro {
+  background-image: url("https://mdbootstrap.com/img/new/fluid/city/018.jpg");
+  height: 100vh;
+}
 
 .card{
   width: 400px;
@@ -34,4 +38,12 @@
 }
 .number3{
   font-weight:500;
+}
+
+body{
+  background: url('../img/fundo.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -moz-background-size: cover;
 }
