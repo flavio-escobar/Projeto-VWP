@@ -32,5 +32,5 @@ class FormLogin(FlaskForm):
 
 class FormSolicitarVoucher(FlaskForm):
     solicitante = StringField('Nome do solicitante', validators=[DataRequired()])
-    cpf_mat = StringField('Digite o CPF ou Matricula (Somente Numeros)', validators=[DataRequired(), Length(6, 11)]) 
+    cpf_mat = StringField('Digite o CPF (Somente Numeros)', validators=[DataRequired(), Length(6, 11)]) 
     botao_submit_solicitarvoucher = SubmitField('SolicitarVoucher')
