@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    <br>
+    <br>
         <div class="container">
             <form method="POST" action="" class="mx-auto" style="width: 400px;">
                 {{ form_solicitarvoucher.csrf_token }}
@@ -9,7 +11,7 @@
                 <fieldset>
                     <div class="form-group">
                         {{ form_solicitarvoucher.solicitante.label(class="form-control-label") }}
-                        
+
                         {% if form_solicitarvoucher.solicitante.errors %}
                             {{ form_solicitarvoucher.solicitante(class="form-control is-invalid") }}
                             <div class="invalid-feedback">
@@ -34,7 +36,10 @@
                         {% endif %}
                     </div>
                 </fieldset>
-                {{ form_solicitarvoucher.botao_submit_solicitarvoucher(class="btn btn-primary") }}
+                <br>
+                <div class="ms-5">
+                    {{ form_solicitarvoucher.botao_submit_solicitarvoucher(class="btn btn-primary") }}
+             </div>
             </form>
         </div>
 {% endblock %}
