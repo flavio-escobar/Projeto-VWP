@@ -33,20 +33,6 @@ def valida_cpf(cpf):
             if (not cpf) or (len(cpf) < 11):
                 flash("teste2",'alter-success')
                 return False
-   
-          # Pega apenas os 9 primeiros dígitos do CPF e gera os 2 dígitos que faltam 
-            inteiros = map(int, cpf)
-            novo = inteiros[:9]
-            
-            while len(novo) < 11:
-                flash("teste3",'alter-success')
-                r = sum([(len(novo)+1-i)*v for i,v in enumerate(novo)]) % 11
-                if r > 1:
-                    f = 11 - r
-                else:
-                    f = 0
-                novo.append(f)
- 
        # Se o número gerado coincidir com o número original, é válido
             if novo == inteiros:
                 flash("teste4",'alter-success')
