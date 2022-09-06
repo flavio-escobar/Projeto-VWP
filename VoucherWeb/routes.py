@@ -21,7 +21,39 @@ def espertao(esperto):
             #flash("usado:{}".format(usado[i].solicitante),'alert-danger')
             #flash("esperto:{}".format(esperto),'alert-danger')
             return True
-    return False
+    return False      
+
+def valida_cpf(cpf):
+    try: 
+        if int(cpf):  
+            flash("teste1",'alter-success')
+        #  Verifica se o CPF tem todos os números iguais, ex: 111.111.111-11
+        #  Esses CPFs são considerados inválidos mas passam na validação dos dígitos
+        #  Antigo código para referência: if all(cpf[i] == cpf[i+1] for i in range (0, len(cpf)-1))
+            if (not cpf) or (len(cpf) < 11):
+                flash("teste2",'alter-success')
+                return False
+   
+          # Pega apenas os 9 primeiros dígitos do CPF e gera os 2 dígitos que faltam 
+            inteiros = map(int, cpf)
+            novo = inteiros[:9]
+            
+            while len(novo) < 11:
+                flash("teste3",'alter-success')
+                r = sum([(len(novo)+1-i)*v for i,v in enumerate(novo)]) % 11
+                if r > 1:
+                    f = 11 - r
+                else:
+                    f = 0
+                novo.append(f)
+ 
+       # Se o número gerado coincidir com o número original, é válido
+            if novo == inteiros:
+                flash("teste4",'alter-success')
+                return True
+    except:
+        flash('teste6','alter-success')
+        return False
 
 #o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
 @app.route('/', methods=['GET', 'POST'])
@@ -31,12 +63,14 @@ def home():
         #verificar se o solicitante ja pediu voucher na data corrente
         if espertao(form_solicitarvoucher.solicitante.data):
             flash("Só é possivel solicitar um Voucher por dia. Você já solicitou um voucher hoje.",'alert-danger')
+        #elif not valida_cpf(form_solicitarvoucher.cpf.data):
+        #    flash("CPF inválido. Digite um CPF válido para continuar.",'alert-danger')
         else:
             #consultar o Bd atras de um voucher não usado
             nao_usado = Voucher.query.filter_by(data_uso = '').first()
             if nao_usado:
                 #escrever nesse BD o nome e cpf_mat do solicitante e data da solicitação,marcar voucher como usado=True
-                voucher = Voucher(cod_voucher=nao_usado.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf = form_solicitarvoucher.cpf_mat.data, data_uso = data)
+                voucher = Voucher(cod_voucher=nao_usado.cod_voucher, usado = True, solicitante = form_solicitarvoucher.solicitante.data, cpf = form_solicitarvoucher.cpf.data, data_uso = data)
                 database.session.delete(nao_usado)
                 database.session.commit()
                 database.session.add(voucher)

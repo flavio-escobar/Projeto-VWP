@@ -23,16 +23,16 @@
                             {{ form_solicitarvoucher.solicitante(class="form-control") }}
                         {% endif %}
 
-                        {{ form_solicitarvoucher.cpf_mat.label(class="form-control-label") }}
-                        {% if form_solicitarvoucher.cpf_mat.errors %}
-                            {{ form_solicitarvoucher.cpf_mat(class="form-control is-invalid") }}
+                        {{ form_solicitarvoucher.cpf.label(class="form-control-label") }}
+                        {% if form_solicitarvoucher.cpf.errors %}
+                            {{ form_solicitarvoucher.cpf(class="form-control is-invalid") }}
                             <div class="invalid-feedback">
-                                {% for erro in form_solicitarvoucher.cpf_mat.errors %}
+                                {% for erro in form_solicitarvoucher.cpf.errors %}
                                     {{ erro }}
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form_solicitarvoucher.cpf_mat(class="form-control") }}
+                            {{ form_solicitarvoucher.cpf(class="form-control") }}
                         {% endif %}
                     </div>
                 </fieldset>

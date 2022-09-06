@@ -1,11 +1,12 @@
+from flask import Flask, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from VoucherWeb.models import Usuario
+from VoucherWeb.models import Usuario, Voucher
 
 class FormCriarConta(FlaskForm):
     username = StringField('Nome de usuário', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired(), Email()])
+    email = StringField('E-mail', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(6, 40)])
     confirmacao = PasswordField('Confirme a Senha', validators=[DataRequired(), EqualTo('senha')])
     botao_submit_criarconta = SubmitField('Criar Conta')
@@ -22,8 +23,7 @@ class FormCriarConta(FlaskForm):
     def validate_username(self, username):
         usuario = Usuario.query.filter_by(username=username.data).first()
         if usuario:
-            raise ValidationError('Username já cadastrado. Cadastra-se com outro username.')        
-
+            raise ValidationError('Username já cadastrado. Cadastra-se com outro username.')       
 
 class FormLogin(FlaskForm):
     username = StringField('Nome de usuário', validators=[DataRequired()])
@@ -32,5 +32,14 @@ class FormLogin(FlaskForm):
 
 class FormSolicitarVoucher(FlaskForm):
     solicitante = StringField('Nome do solicitante', validators=[DataRequired()])
-    cpf_mat = StringField('Digite o CPF (Somente Numeros)', validators=[DataRequired(), Length(6, 11)]) 
+    cpf = StringField('Digite o CPF (Somente Numeros)', validators=[DataRequired(), Length(11,11)]) 
     botao_submit_solicitarvoucher = SubmitField('SolicitarVoucher')
+    #nao funciona ainda, precisa de revisão
+    def validate_cpf(self, cpf):
+        flash(cpf,'alert-success')
+        if cpf:
+            pass
+        else:
+            raise ValidationError('Digite somente numeros inteiros!')
+        
+ 
