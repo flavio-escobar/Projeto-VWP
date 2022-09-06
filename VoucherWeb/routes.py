@@ -24,21 +24,57 @@ def espertao(esperto):
     return False      
 
 def valida_cpf(cpf):
-    try: 
-        if int(cpf):  
-            flash("teste1",'alter-success')
+    #try: 
         #  Verifica se o CPF tem todos os números iguais, ex: 111.111.111-11
         #  Esses CPFs são considerados inválidos mas passam na validação dos dígitos
         #  Antigo código para referência: if all(cpf[i] == cpf[i+1] for i in range (0, len(cpf)-1))
-            if (not cpf) or (len(cpf) < 11):
-                flash("teste2",'alter-success')
-                return False
-       # Se o número gerado coincidir com o número original, é válido
-            if novo == inteiros:
-                flash("teste4",'alter-success')
+        if int(cpf) and len(set(cpf)) != 1:  
+            flash("teste1 - é inteiro e os digitos são diferentes",'alter-success')
+            num = 11
+            ver_cpf[0]
+            d1 = 0
+            d2 = 0
+            for i in range(9):
+                ver_cpf.append(cpf[:i:])
+                flash(ver_cpf,'alert-success')
+
+            for i in ver_cpf:
+                num = num - 1
+                d1 += (int(i)*num) #soma os resultados entre os 9pri digitos e o fatorial de 10
+
+            num = 11
+            d1 = 11 - (d1 % 11) #objetivo é pegar o resto da divisão
+            
+            if d1 > 9:
+                d1 = 0
+
+            
+            flash(ver_cpf[0],'alter-success')
+            ver_cpf.append(int(d1))
+            
+            flash("teste3 - primeiro if",'alter-success')
+            
+
+            for i in ver_cpf:
+                num = num - 1
+                d2 += (int(i)*num)
+            flash("teste4 - segundo for",'alter-success')
+
+            d2 = 11 - (d2 % 11)
+
+            if d2 > 9:
+                d2 = 0
+            ver_cpf.append(d2)
+            flash("teste5 - segundo if",'alter-success')
+            
+            if cpf == ver_cpf:
+                flash("teste6 - cpf valido",'alter-success')
                 return True
-    except:
-        flash('teste6','alter-success')
+        else:
+            flash("Teste 7 - nao inteiro ou os digitos sao iguais")
+            return False
+    #except:
+        flash('O CPF informado não é valido. Digite somente numeros.','alter-danger')
         return False
 
 #o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
@@ -49,8 +85,8 @@ def home():
         #verificar se o solicitante ja pediu voucher na data corrente
         if espertao(form_solicitarvoucher.solicitante.data):
             flash("Só é possivel solicitar um Voucher por dia. Você já solicitou um voucher hoje.",'alert-danger')
-        #elif not valida_cpf(form_solicitarvoucher.cpf.data):
-        #    flash("CPF inválido. Digite um CPF válido para continuar.",'alert-danger')
+        elif not valida_cpf(form_solicitarvoucher.cpf.data):
+            flash("CPF inválido. Digite um CPF válido para continuar.",'alert-danger')
         else:
             #consultar o Bd atras de um voucher não usado
             nao_usado = Voucher.query.filter_by(data_uso = '').first()
