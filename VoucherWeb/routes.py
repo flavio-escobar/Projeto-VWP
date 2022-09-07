@@ -24,57 +24,46 @@ def espertao(esperto):
     return False      
 
 def valida_cpf(cpf):
-    #try: 
+    try: 
         #  Verifica se o CPF tem todos os números iguais, ex: 111.111.111-11
         #  Esses CPFs são considerados inválidos mas passam na validação dos dígitos
-        #  Antigo código para referência: if all(cpf[i] == cpf[i+1] for i in range (0, len(cpf)-1))
         if int(cpf) and len(set(cpf)) != 1:  
-            flash("teste1 - é inteiro e os digitos são diferentes",'alter-success')
             num = 11
-            ver_cpf[0]
+            ver_cpf = []
             d1 = 0
             d2 = 0
-            for i in range(9):
-                ver_cpf.append(cpf[:i:])
-                flash(ver_cpf,'alert-success')
 
+            #povoa a lista auxiliar com os numeros do cpf
+            for i in range(9):
+                ver_cpf.append(cpf[i])
+
+            #valida o digito verificador 1
             for i in ver_cpf:
                 num = num - 1
-                d1 += (int(i)*num) #soma os resultados entre os 9pri digitos e o fatorial de 10
-
-            num = 11
+                d1 += (int(i)*num) #soma os valores do produto entre os 9pri digitos e o fatorial de 10
             d1 = 11 - (d1 % 11) #objetivo é pegar o resto da divisão
-            
             if d1 > 9:
                 d1 = 0
-
+            #adiciona o digito verificador 1 na lista auxiliar
+            ver_cpf.append(str(d1))
             
-            flash(ver_cpf[0],'alter-success')
-            ver_cpf.append(int(d1))
-            
-            flash("teste3 - primeiro if",'alter-success')
-            
-
+            num = 11
             for i in ver_cpf:
-                num = num - 1
                 d2 += (int(i)*num)
-            flash("teste4 - segundo for",'alter-success')
-
+                num = num - 1
             d2 = 11 - (d2 % 11)
-
             if d2 > 9:
                 d2 = 0
-            ver_cpf.append(d2)
-            flash("teste5 - segundo if",'alter-success')
+            #adiciona o digito verificador 2 na lista auxiliar
+            ver_cpf.append(str(d2))
+
+            cpf_novo = "".join(ver_cpf)
             
-            if cpf == ver_cpf:
-                flash("teste6 - cpf valido",'alter-success')
+            if cpf == cpf_novo:
                 return True
         else:
-            flash("Teste 7 - nao inteiro ou os digitos sao iguais")
             return False
-    #except:
-        flash('O CPF informado não é valido. Digite somente numeros.','alter-danger')
+    except:
         return False
 
 #o @ é um decorator, serve para atribuir outras caracteristicas para as mesmas funções
