@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    <br>
+    <br>
         <div class="container">
             <form method="POST" action="" class="mx-auto" style="width: 400px;">
                 {{ form_solicitarvoucher.csrf_token }}
@@ -9,7 +11,7 @@
                 <fieldset>
                     <div class="form-group">
                         {{ form_solicitarvoucher.solicitante.label(class="form-control-label") }}
-                        
+
                         {% if form_solicitarvoucher.solicitante.errors %}
                             {{ form_solicitarvoucher.solicitante(class="form-control is-invalid") }}
                             <div class="invalid-feedback">
@@ -21,20 +23,23 @@
                             {{ form_solicitarvoucher.solicitante(class="form-control") }}
                         {% endif %}
 
-                        {{ form_solicitarvoucher.cpf_mat.label(class="form-control-label") }}
-                        {% if form_solicitarvoucher.cpf_mat.errors %}
-                            {{ form_solicitarvoucher.cpf_mat(class="form-control is-invalid") }}
+                        {{ form_solicitarvoucher.cpf.label(class="form-control-label") }}
+                        {% if form_solicitarvoucher.cpf.errors %}
+                            {{ form_solicitarvoucher.cpf(class="form-control is-invalid") }}
                             <div class="invalid-feedback">
-                                {% for erro in form_solicitarvoucher.cpf_mat.errors %}
+                                {% for erro in form_solicitarvoucher.cpf.errors %}
                                     {{ erro }}
                                 {% endfor %}
                             </div>
                         {% else %}
-                            {{ form_solicitarvoucher.cpf_mat(class="form-control") }}
+                            {{ form_solicitarvoucher.cpf(class="form-control") }}
                         {% endif %}
                     </div>
                 </fieldset>
-                {{ form_solicitarvoucher.botao_submit_solicitarvoucher(class="btn btn-primary") }}
+                <br>
+                <div class="ms-5">
+                    {{ form_solicitarvoucher.botao_submit_solicitarvoucher(class="btn btn-primary") }}
+             </div>
             </form>
         </div>
 {% endblock %}

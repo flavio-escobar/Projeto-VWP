@@ -14,7 +14,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///voucher.db'
 database = SQLAlchemy(app)
 #instanciamento do sistema de encriptaçao da senha dos usuarios no BD
 bcrypt = Bcrypt(app)
+
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'alert-info'
 
 #importação no final do codigo para evitar importação circular
 from VoucherWeb import routes

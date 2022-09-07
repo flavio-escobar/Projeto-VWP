@@ -18,8 +18,8 @@ class Usuario(database.Model, UserMixin):
 
 class Voucher(database.Model):
     id = database.Column(database.Integer, primary_key=True)
-    cod_voucher = database.Column(database.String, nullable=False, unique=True)
+    cod_voucher = database.Column(database.String, nullable=False, unique=True, default = '')
     usado = database.Column(database.Boolean, default = False)
     solicitante = database.Column(database.String, default = '')
-    cpf_mat = database.Column(database.String, nullable=False)
+    cpf = database.Column(database.String, nullable=False, default = '')
     data_uso = database.Column(database.String, default = '')
