@@ -2,7 +2,16 @@
 
 {% block body %}
     <div class="container table-responsive-lg">
-        <h4>Pagina de Administração</h4>
+      <br>
+        <h4 class="ms-7">Pagina de Administração</h4>
+        <br>
+          <form>
+            <div class="form-group">
+              <label for="exampleFormControlFile1">Anexar arquivo de Voucher aqui:</label>
+              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+            </div>
+          </form>
+          <br>
         <table class="table tablet-striped bg-light">
             <thead>
               <tr>
@@ -28,12 +37,5 @@
             {% endfor %}
             </tbody>
           </table>
-          <br>
-          <form>
-            <div class="form-group">
-              <label for="exampleFormControlFile1">Anexar arquivo de Voucher aqui:</label>
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
-            </div>
-          </form>
     </div>
 {% endblock %}

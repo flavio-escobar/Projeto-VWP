@@ -34,12 +34,3 @@ class FormSolicitarVoucher(FlaskForm):
     solicitante = StringField('Nome do solicitante', validators=[DataRequired()])
     cpf = StringField('Digite o CPF (Somente Numeros)', validators=[DataRequired(), Length(11,11)]) 
     botao_submit_solicitarvoucher = SubmitField('SolicitarVoucher')
-    #nao funciona ainda, precisa de revisão
-    def validate_cpf(self, cpf):
-        flash(cpf,'alert-success')
-        if cpf:
-            pass
-        else:
-            raise ValidationError('Digite somente numeros inteiros!')
-        
- 
