@@ -1,8 +1,9 @@
 from flask import Flask, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, BooleanField, IntegerField, FileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from VoucherWeb.models import Usuario, Voucher
+import pandas as pd
 
 class FormCriarConta(FlaskForm):
     username = StringField('Nome de usuário', validators=[DataRequired()])
@@ -34,3 +35,7 @@ class FormSolicitarVoucher(FlaskForm):
     solicitante = StringField('Nome do solicitante', validators=[DataRequired()])
     cpf = StringField('Digite o CPF (Somente Numeros)', validators=[DataRequired(), Length(11,11)]) 
     botao_submit_solicitarvoucher = SubmitField('SolicitarVoucher')
+
+class FormCarregarVoucher(FlaskForm):
+    lista_carga = FileField('Arquivo.xlsx: ', validators=[DataRequired()])
+    botao_submit_carregarvoucher = SubmitField('CarregarVoucher')

@@ -3,12 +3,26 @@
 {% block body %}
     <div class="container table-responsive-lg">
       <br>
-        <h4 class="ms-7">Pagina de Administração</h4>
-        <br>
-          <form>
-            <div class="form-group">
-              <label for="exampleFormControlFile1">Anexar arquivo de Voucher aqui:</label>
-              <input type="file" class="form-control-file" id="exampleFormControlFile1">
+        <h4 class="ms-6">Pagina de Administração</h4>
+          <form method="POST" action="" class="mx-auto">
+            {{ form_carregarvoucher.csrf_token }}
+            <div class="mb-3">
+              {{ form_carregarvoucher.lista_carga.label(class="form-control-label") }}
+
+                        {% if form_carregarvoucher.lista_carga.errors %}
+                            {{ form_carregarvoucher.lista_carga(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for erro in form_carregarvoucher.lista_carga.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_carregarvoucher.lista_carga(class="form-control") }}
+                        {% endif %}
+              <br>
+              <div>
+                {{ form_carregarvoucher.botao_submit_carregarvoucher(class="btn btn-primary") }}
+              </div>
             </div>
           </form>
           <br>
