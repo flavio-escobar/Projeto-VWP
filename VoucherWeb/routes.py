@@ -162,31 +162,35 @@ def sair():
 def perfil():
     return render_template('perfil.html')
 
+def limpando_lista(lista_excel, lista_bd):
+    verificador = False
+    lista_filtrada_voucher = []
+    for excel in lista_excel:
+        print('excel{}'.format(str(excel)))
+        print(lista_bd)
+        print(lista_excel)
+        if str(excel) not in lista_bd:
+            lista_filtrada_voucher.append(str(excel))
+            print('Entrou:{}'.format(str(excel)))
+        else:
+            print('Não entrou: {}'.format(str(excel)))
+    return lista_filtrada_voucher
+
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
     form_carregarvoucher = FormCarregarVoucher()
     #Perga a lista de vouchers do BD
     lista_voucher = Voucher.query.all()
+    lista_bd = []
     if form_carregarvoucher.validate_on_submit() and 'botao_submit_carregarvoucher' in request.form:
-        excel_carga = pd.read_excel(form_carregarvoucher.lista_carga.data)
+        excel = pd.read_excel(form_carregarvoucher.lista_carga.data)
         #comparar cada voucher da lista de carga com os vouchers que ja estao no sistema para evitar a duplicação
-        lista_filtrada_voucher = []
-        verificador = False
-        print(excel_carga)
-        for i, valor in enumerate(excel_carga):
-            print(valor)
-            for aux in range(len(lista_voucher)):
-                if str(valor) != str(lista_voucher[aux].cod_voucher) and str(valor) not in lista_filtrada_voucher:
-                    verificador = True
-                else:
-                    verificador = False
-            if verificador == True:
-                lista_filtrada_voucher.append(str(valor))
-                print('Entrou:{}'.format(str(valor)))
-            else:
-                print('Não entrou: {}'.format(str(valor)))
-        #pegar a lista filtrada com os voucher validos e adicionar no banco
+        data = excel[['voucher']]
+        print(data.tolist())
+        for i in lista_voucher:
+            lista_bd.append(str(i.cod_voucher))
+        lista_filtrada_voucher = limpando_lista(excel, lista_bd)
         #try:
         for item in lista_filtrada_voucher:
             voucher = Voucher(cod_voucher=item, usado=False, solicitante= '', cpf='', data_uso='')
