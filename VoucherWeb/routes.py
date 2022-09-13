@@ -7,7 +7,7 @@ import pandas as pd
 import datetime
 
 
-lista_usuarios = ['flavio', 'escobar']
+lista_usuarios = ['admin']
 
 #Pega a data corrente
 data = (str(datetime.date.today()))
@@ -19,7 +19,7 @@ def espertao(esperto):
     #Percorre a lista de vouchers usados e ve se tem algum espertão nessa lista
     for i in range(len(usado)):
         if usado[i].cpf == esperto:
-            #flash("usado:{}".format(usado[i].solicitante),'alert-danger')
+            #flash("usado:{}".format(usado[i].cpf),'alert-danger')
             #flash("esperto:{}".format(esperto),'alert-danger')
             return True
     return False      
@@ -74,7 +74,7 @@ def home():
     form_solicitarvoucher = FormSolicitarVoucher()
     if form_solicitarvoucher.validate_on_submit and 'botao_submit_solicitarvoucher' in request.form:
         #verificar se o solicitante ja pediu voucher na data corrente
-        if espertao(form_solicitarvoucher.solicitante.data):
+        if espertao(form_solicitarvoucher.cpf.data):
             flash("Só é possivel solicitar um Voucher por dia. Você já solicitou um voucher hoje.",'alert-danger')
         elif not valida_cpf(form_solicitarvoucher.cpf.data):
             flash("CPF inválido. Digite um CPF válido para continuar.",'alert-danger')
