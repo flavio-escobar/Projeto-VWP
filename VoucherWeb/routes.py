@@ -129,8 +129,9 @@ def login():
             flash("Falha no login. Username ou senha incorretos", 'alert-danger')
     return render_template('login.html', form_login=form_login)
 
+
+#@login_required
 @app.route('/criar_conta', methods=['GET', 'POST'])
-@login_required
 def criar_conta():
     #Instacia as informações do formulario de criar conta
     form_criarconta = FormCriarConta()
@@ -162,19 +163,39 @@ def sair():
 def perfil():
     return render_template('perfil.html')
 
-def limpando_lista(lista_excel, lista_bd):
-    verificador = False
-    lista_filtrada_voucher = []
-    for excel in lista_excel:
-        print('excel{}'.format(str(excel)))
-        print(lista_bd)
-        print(lista_excel)
-        if str(excel) not in lista_bd:
-            lista_filtrada_voucher.append(str(excel))
-            print('Entrou:{}'.format(str(excel)))
-        else:
-            print('Não entrou: {}'.format(str(excel)))
-    return lista_filtrada_voucher
+def upload(lista_df_excel, lista_voucher_bd):
+    #Perga a lista de vouchers do BD
+    lista_string_excel = []
+    lista_string_bd = []
+    lista_filtrada = []
+    coluna = lista_df_excel.columns.tolist()#Pega o nome da coluna para ser usada posteriormente na leitura das linhas
+
+    #Transforma a lista Dataframe do pandas em uma lista de strings para facilitar a comparação
+    for i in range(len(lista_df_excel)):
+        lista_string_excel.append("".join(map(str, lista_df_excel.iloc[i][coluna].tolist())))#coloc numa lista o valor de cada linha da coluna inicial
+    lista_string_excel.append("".join(coluna))
+
+    #transforma a lista de voucher do banco em uma lista de string para facilitar a comparação
+    for i in lista_voucher_bd:
+            lista_string_bd.append(str(i.cod_voucher))
+
+    #comparar cada voucher da lista de carga com os vouchers que ja estao no sistema para evitar a duplicação
+    for item in lista_string_excel:
+        count=0
+        if item not in lista_string_bd:
+            lista_filtrada.append(str(item))
+            count = count + 1
+
+    if lista_filtrada:
+        #pegar a lista filtrada com os voucher validos e adicionar no banco
+        for item in lista_filtrada:
+            voucher = Voucher(cod_voucher=item, usado=False, solicitante= '', cpf='', data_uso='')
+            database.session.add(voucher)
+        database.session.commit()
+    
+    lista_contadores = [len(lista_filtrada), len(lista_string_excel)]
+
+    return lista_contadores
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -182,23 +203,14 @@ def admin():
     form_carregarvoucher = FormCarregarVoucher()
     #Perga a lista de vouchers do BD
     lista_voucher = Voucher.query.all()
-    lista_bd = []
     if form_carregarvoucher.validate_on_submit() and 'botao_submit_carregarvoucher' in request.form:
         excel = pd.read_excel(form_carregarvoucher.lista_carga.data)
-        #comparar cada voucher da lista de carga com os vouchers que ja estao no sistema para evitar a duplicação
-        data = excel[['voucher']]
-        print(data.tolist())
-        for i in lista_voucher:
-            lista_bd.append(str(i.cod_voucher))
-        lista_filtrada_voucher = limpando_lista(excel, lista_bd)
-        #try:
-        for item in lista_filtrada_voucher:
-            voucher = Voucher(cod_voucher=item, usado=False, solicitante= '', cpf='', data_uso='')
-            database.session.add(voucher)
-        database.session.commit()
-        flash('Base carregada com Sucesso!', 'alert-success')
-        #except:
-        #    flash('Erro ao carregar a base!', 'alert-primary')
+        qtde_vouchers = []
+        try:
+            qtde_vouchers = upload(excel, lista_voucher)
+            flash('Base carregada com Sucesso. Carregados {} vouchers de {}.'.format(qtde_vouchers[0],qtde_vouchers[1]), 'alert-primary')
+        except:
+            flash('Erro ao carregar a base!', 'alert-danger')
         #Redirecionar para a pagina admin de novo
         return redirect(url_for('admin'))
     #Pega o tamanho da lista em inteiro para percorrer e mostrar todas as informações do bd
