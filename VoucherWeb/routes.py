@@ -182,7 +182,7 @@ def upload(lista_df_excel, lista_voucher_bd):
     #comparar cada voucher da lista de carga com os vouchers que ja estao no sistema para evitar a duplicação
     for item in lista_string_excel:
         count=0
-        if item not in lista_string_bd:
+        if item not in lista_string_bd and item not in lista_filtrada:
             lista_filtrada.append(str(item))
             count = count + 1
 
@@ -205,7 +205,7 @@ def admin():
     lista_voucher = Voucher.query.all()
     if form_carregarvoucher.validate_on_submit() and 'botao_submit_carregarvoucher' in request.form:
         excel = pd.read_excel(form_carregarvoucher.lista_carga.data)
-        qtde_vouchers = []
+        #qtde_vouchers = []
         try:
             qtde_vouchers = upload(excel, lista_voucher)
             flash('Base carregada com Sucesso. Carregados {} vouchers de {}.'.format(qtde_vouchers[0],qtde_vouchers[1]), 'alert-primary')
