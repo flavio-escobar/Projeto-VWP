@@ -163,6 +163,7 @@ def sair():
 def perfil():
     return render_template('perfil.html')
 
+#função que valida e sobe a lista de vouchers em arquivo xlsx
 def upload(lista_df_excel, lista_voucher_bd):
     #Perga a lista de vouchers do BD
     lista_string_excel = []

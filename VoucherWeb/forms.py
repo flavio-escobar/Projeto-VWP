@@ -16,7 +16,7 @@ class FormCriarConta(FlaskForm):
     #para que eu possa criar uma validação para o campo email no formulario, porque ele é unico na estrutura do bd e se não tiver essa validação no formulario, o sistema ira apresentar um erro
     #na hora de inserir um cadastro com o email igual a algum que ja tenha no bd. Como não é interessante o sistema apresentar um erro, fiz aqui um validador para tratamento de exceção.
     def validate_email(self, email):
-        # o email sozinho corresponde ao campo no formulario, para pegar o valor do campo do formulario é preciso colocar email.data
+        #o email sozinho corresponde ao campo no formulario, para pegar o valor do campo do formulario é preciso colocar email.data
         usuario = Usuario.query.filter_by(email=email.data).first()
         if usuario:
             raise ValidationError('Email já cadastrado. Cadastra-se com outro e-mail ou faça login para continuar')
