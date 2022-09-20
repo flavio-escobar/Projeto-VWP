@@ -215,6 +215,17 @@ def admin():
         #Redirecionar para a pagina admin de novo
         return redirect(url_for('admin'))
     #Pega o tamanho da lista em inteiro para percorrer e mostrar todas as informações do bd
-    tam_lista = (int(len(lista_voucher)))
+    lista_usados = []
+    lista_naousados = []
+    lista_organizada = []
+    for i in range(len(lista_voucher)):
+        if lista_voucher[i].usado == True:
+            lista_usados.append(lista_voucher[i])
+        else:
+            lista_naousados.append(lista_voucher[i])
+    
+    lista_organizada.extend(lista_usados)
+    lista_organizada.extend(lista_naousados)
+    tam_lista = (int(len(lista_organizada)))
     #passa o caminho de renderização da pagina admin bem como as variaveis para renderzação da tabela de consulta de vouchers
-    return render_template('admin.html', form_carregarvoucher=form_carregarvoucher, tam_lista=tam_lista, lista_voucher=lista_voucher)
+    return render_template('admin.html', form_carregarvoucher=form_carregarvoucher, tam_lista=tam_lista, lista_organizada=lista_organizada)
